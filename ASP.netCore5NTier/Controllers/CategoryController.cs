@@ -22,5 +22,22 @@ namespace ASP.netCore5NTier.Controllers
             IEnumerable<Category> categories = _db.Category;
             return View(categories);
         }
+
+        //Get Category 
+        public IActionResult Create()
+        {
+            
+            return View();
+        }
+
+        //POST create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Category category)
+        {
+            _db.Category.Add(category);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }

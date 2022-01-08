@@ -27,7 +27,7 @@ namespace ASP.netCore5NTier.Controllers
         //Get Category 
         public IActionResult Create()
         {
-            
+
             return View();
         }
 
@@ -62,19 +62,50 @@ namespace ASP.netCore5NTier.Controllers
             return View(obj);
         }
 
-        //POST create
+        //POST edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Category category)
         {
             if (ModelState.IsValid)
             {
-                _db.Category.Update( category);
+                _db.Category.Update(category);
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
             return View();
+        }
+
+        //Get Delete 
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var obj = _db.Category.Find(id);
+
+            if (obj == null)
+                return NotFound();
+
+            return View(obj);
+        }
+
+        //POST edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeletePost(int? id)
+        {
+            var obj = _db.Category.Find(id);
+            if (obj == null)
+                return NotFound();
+
+            _db.Category.Remove(obj);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+
         }
     }
 }

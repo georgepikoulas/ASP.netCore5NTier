@@ -35,9 +35,14 @@ namespace ASP.netCore5NTier.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Category category)
         {
-            _db.Category.Add(category);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                _db.Category.Add(category);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ASP.netCore5NTier.Data;
 using ASP.netCore5NTier.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ASP.netCore5NTier.Controllers
@@ -21,7 +22,7 @@ namespace ASP.netCore5NTier.Controllers
         public IActionResult Index()
         {
             IEnumerable<Product> products = _db.Product;
-            foreach (var item  in products)
+            foreach (var item in products)
             {
                 item.Category = _db.Category.FirstOrDefault(p => p.Id == item.Id);
             }
@@ -32,6 +33,15 @@ namespace ASP.netCore5NTier.Controllers
         //Get Upsert 
         public IActionResult Upsert(int? id)
         {
+            IEnumerable<SelectListItem> CategoryDropDown = _db.Category.Select(p => new SelectListItem
+            {
+
+                Text = p.Name,
+                Value = p.Id.ToString()
+            });
+
+            ViewBag.CategoryDropDown = CategoryDropDown;
+
             var product = new Product();
             if (id == null)
             {

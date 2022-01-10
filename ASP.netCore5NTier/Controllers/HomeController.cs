@@ -48,11 +48,22 @@ namespace ASP.netCore5NTier.Controllers
 
         public IActionResult Details(int id)
         {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null
+                && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0)
+            {
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
+            }
             var detailsVM = new DetailsVM() { 
                 Product = _db.Product.Include(p=>p.Category).Include(p => p.ApplicationType).Where(p=>p.Id == id ).FirstOrDefault(),
                 ExistsInCart = false
             };
 
+            foreach (var item in shoppingCartList)
+            {
+                if (item.ProductId == id)
+                    detailsVM.ExistsInCart = true;
+            }
 
             return View(detailsVM);
         }

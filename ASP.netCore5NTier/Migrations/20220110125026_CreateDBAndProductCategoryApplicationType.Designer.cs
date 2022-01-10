@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.netCore5NTier.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20220109182352_AddProductToDb")]
-    partial class AddProductToDb
+    [Migration("20220110125026_CreateDBAndProductCategoryApplicationType")]
+    partial class CreateDBAndProductCategoryApplicationType
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,6 +62,9 @@ namespace ASP.netCore5NTier.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ApplicationTypeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -80,6 +83,8 @@ namespace ASP.netCore5NTier.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApplicationTypeId");
+
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Product");
@@ -87,11 +92,19 @@ namespace ASP.netCore5NTier.Migrations
 
             modelBuilder.Entity("ASP.netCore5NTier.Models.Product", b =>
                 {
+                    b.HasOne("ASP.netCore5NTier.Models.ApplicationType", "ApplicationType")
+                        .WithMany()
+                        .HasForeignKey("ApplicationTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ASP.netCore5NTier.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApplicationType");
 
                     b.Navigation("Category");
                 });

@@ -29,6 +29,14 @@ namespace ASP.netCore5NTier
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")
                 ));
+
+            services.AddHttpContextAccessor();
+            services.AddSession(op =>
+            {
+                op.IdleTimeout = TimeSpan.FromMinutes(10);
+                op.Cookie.HttpOnly = true;
+                op.Cookie.IsEssential = true;
+            });
             services.AddControllersWithViews();
         }
 
@@ -51,7 +59,7 @@ namespace ASP.netCore5NTier
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

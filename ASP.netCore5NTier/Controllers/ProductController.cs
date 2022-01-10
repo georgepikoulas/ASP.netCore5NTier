@@ -108,6 +108,34 @@ namespace ASP.netCore5NTier.Controllers
                 else
                 {
                     //Updating 
+                    var getProductDb = _db.Product.AsNoTracking().FirstOrDefault(p => p.Id == productVm.Product.Id);
+
+                    if (files.Count > 0)
+                    {
+                        var upload = webRootPath + WC.ImagePath;
+                        var fileName = Guid.NewGuid().ToString();
+                        var extension = Path.GetExtension(files[0].FileName);
+
+                        var oldfile = Path.Combine(upload, getProductDb.Image);
+                        if (System.IO.File.Exists(oldfile))
+                        {
+                            System.IO.File.Delete(oldfile);
+                        }
+
+                        using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                        {
+                            files[0].CopyTo(fileStream);
+                        }
+
+                        productVm.Product.Image = fileName + extension;
+
+                    }
+                    else
+                    {
+                        productVm.Product.Image = getProductDb.Image;
+                    }
+
+                    _db.Product.Update(productVm.Product);
                 }
                 _db.SaveChanges();
 

@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.netCore5NTier.Data;
 using ASP.netCore5NTier.Models;
 using ASP.netCore5NTier.Models.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,11 +16,12 @@ namespace ASP.netCore5NTier.Controllers
     public class ProductController : Controller
     {
         private readonly ApplicationDBContext _db;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-
-        public ProductController(ApplicationDBContext db)
+        public ProductController(ApplicationDBContext db, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -78,12 +81,31 @@ namespace ASP.netCore5NTier.Controllers
         //POST upsert
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(Category category)
+        public IActionResult Upsert(ProductVM  productVm)
         {
             if (ModelState.IsValid)
             {
-                _db.Category.Add(category);
+                var files = HttpContext.Request.Form.Files;
+                string webRootPath = _webHostEnvironment.WebRootPath;
+
+                if (productVm.Product.Id == 0)
+                {
+                    //Creating
+                    var upload = webRootPath + WC.ImagePath;
+                    var fileName = Guid.NewGuid().ToString();
+                    var extension = Path.GetExtension(files[0].FileName);
+
+                    using (var fileStream = new FileStream(Path.Combine(upload,fileName + extension ), FileMode.Create))
+                    {
+                        files[0].CopyTo(fileStream);
+                    }
+
+                    productVm.Product.Image = fileName + extension;
+                    _db.Product.Add(productVm.Product);
+
+                }
                 _db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
 

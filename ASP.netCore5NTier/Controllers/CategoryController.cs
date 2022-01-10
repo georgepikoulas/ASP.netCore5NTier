@@ -74,7 +74,7 @@ namespace ASP.netCore5NTier.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View();
+            return View(category);
         }
 
         //Get Delete 

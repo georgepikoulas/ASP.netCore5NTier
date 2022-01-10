@@ -102,7 +102,7 @@ namespace ASP.netCore5NTier.Controllers
                     }
 
                     productVm.Product.Image = fileName + extension;
-                    _db.Product.Add(productVm.Product);
+                    _db.Add(productVm.Product);
 
                 }
                 else
@@ -135,15 +135,61 @@ namespace ASP.netCore5NTier.Controllers
                         productVm.Product.Image = getProductDb.Image;
                     }
 
-                    _db.Product.Update(productVm.Product);
+                    _db.Update(productVm.Product);
                 }
                 _db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
 
-            return View();
+            productVm.CategoryListItems = _db.Category.Select(p => new SelectListItem
+            {
+
+                Text = p.Name,
+                Value = p.Id.ToString()
+            });
+            return View(productVm);
         }
+
+        //Get Delete 
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+
+                return NotFound();
+            }
+
+            var product = _db.Product.Include(p => p.Category).FirstOrDefault(p => p.Id == id);
+
+            if (product == null)
+                return NotFound();
+
+            return View(product);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeletePost(int? id)
+        {
+            var product = _db.Product.Find(id);
+            if (product == null)
+                return NotFound();
+            var upload = _webHostEnvironment.WebRootPath + WC.ImagePath;
+
+            var oldfile = Path.Combine(upload, product.Image);
+
+            if (System.IO.File.Exists(oldfile))
+            {
+                System.IO.File.Delete(oldfile);
+            }
+
+            _db.Remove(product);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+
 
 
     }

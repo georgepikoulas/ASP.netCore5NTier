@@ -44,5 +44,16 @@ namespace ASP.netCore5NTier.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult Details(int id)
+        {
+            var detailsVM = new DetailsVM() { 
+                Product = _db.Product.Include(p=>p.Category).Include(p => p.ApplicationType).Where(p=>p.Id == id ).FirstOrDefault(),
+                ExistsInCart = false
+            };
+
+
+            return View(detailsVM);
+        }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using ASP.netCore5NTier.Data;
 using ASP.netCore5NTier.Models;
@@ -65,7 +66,7 @@ namespace ASP.netCore5NTier.Controllers
             }
             else
             {
-                productVM.Product = _db.Product.FirstOrDefault(p => p.Id == productVM.Product.Id);
+                productVM.Product = _db.Product.FirstOrDefault(p => p.Id ==id);
                 if (productVM == null)
                 {
                     return NotFound();
@@ -103,6 +104,10 @@ namespace ASP.netCore5NTier.Controllers
                     productVm.Product.Image = fileName + extension;
                     _db.Product.Add(productVm.Product);
 
+                }
+                else
+                {
+                    //Updating 
                 }
                 _db.SaveChanges();
 

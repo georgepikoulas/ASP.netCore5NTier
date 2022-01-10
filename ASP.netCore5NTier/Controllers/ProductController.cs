@@ -89,7 +89,7 @@ namespace ASP.netCore5NTier.Controllers
             if (ModelState.IsValid)
             {
                 var files = HttpContext.Request.Form.Files;
-                string webRootPath = _webHostEnvironment.WebRootPath;
+                string webRootPath = _webHostEnvironment.WebRootPath; 
 
                 if (productVm.Product.Id == 0)
                 {

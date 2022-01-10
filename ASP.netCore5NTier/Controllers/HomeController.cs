@@ -1,5 +1,8 @@
-﻿using ASP.netCore5NTier.Models;
+﻿using ASP.netCore5NTier.Data;
+using ASP.netCore5NTier.Models;
+using ASP.netCore5NTier.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,15 +15,23 @@ namespace ASP.netCore5NTier.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDBContext _db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDBContext db)
         {
             _logger = logger;
+            _db = db;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var homeVM = new HomeVM() {
+                Products = _db.Product.Include(p =>p.Category).Include(p=>p.ApplicationType),
+                Categories =_db.Category
+            
+            };
+
+            return View(homeVM);
         }
 
         public IActionResult Privacy()

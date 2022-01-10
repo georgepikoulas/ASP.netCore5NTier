@@ -40,7 +40,7 @@ namespace ASP.netCore5NTier.Controllers
             {
                 _db.Category.Add(category);
                 _db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
 
             return View();

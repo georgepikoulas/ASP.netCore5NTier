@@ -26,11 +26,7 @@ namespace ASP.netCore5NTier.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<Product> products = _db.Product;
-            foreach (var item in products)
-            {
-                item.Category = _db.Category.FirstOrDefault(p => p.Id == item.Id);
-            }
+            IEnumerable<Product> products = _db.Product.Include(u => u.Category).Include(u => u.ApplicationType);
 
             return View(products);
         }
@@ -52,6 +48,12 @@ namespace ASP.netCore5NTier.Controllers
             {
                 Product = new Product(),
                 CategoryListItems = _db.Category.Select(p => new SelectListItem
+                {
+
+                    Text = p.Name,
+                    Value = p.Id.ToString()
+                }),
+                ApplicationTypeSelectList = _db.ApplicationType.Select(p => new SelectListItem
                 {
 
                     Text = p.Name,
@@ -148,6 +150,14 @@ namespace ASP.netCore5NTier.Controllers
                 Text = p.Name,
                 Value = p.Id.ToString()
             });
+
+
+            productVm.CategoryListItems = _db.ApplicationType.Select(p => new SelectListItem
+            {
+
+                Text = p.Name,
+                Value = p.Id.ToString()
+            });
             return View(productVm);
         }
 
@@ -160,7 +170,7 @@ namespace ASP.netCore5NTier.Controllers
                 return NotFound();
             }
 
-            var product = _db.Product.Include(p => p.Category).FirstOrDefault(p => p.Id == id);
+            var product = _db.Product.Include(p => p.Category).Include(p=>p.ApplicationType).FirstOrDefault(p => p.Id == id);
 
             if (product == null)
                 return NotFound();

@@ -11,5 +11,6 @@ namespace ASP.netCore5NTier.Models.ViewModels
     {
         public Product Product { get; set; }
         public  IEnumerable<SelectListItem> CategoryListItems { get; set; }
+        public IEnumerable<SelectListItem> ApplicationTypeSelectList { get; set; }
     }
 }

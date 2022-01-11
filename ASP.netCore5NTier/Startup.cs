@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.netCore5NTier.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace ASP.netCore5NTier
@@ -29,6 +30,8 @@ namespace ASP.netCore5NTier
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")
                 ));
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddEntityFrameworkStores<ApplicationDBContext>();
 
             services.AddHttpContextAccessor();
             services.AddSession(op =>
@@ -58,8 +61,9 @@ namespace ASP.netCore5NTier
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-            app.UseSession();
+            app.UseSession(); 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

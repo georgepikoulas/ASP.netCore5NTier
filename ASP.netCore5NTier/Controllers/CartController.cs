@@ -35,5 +35,25 @@ namespace ASP.netCore5NTier.Controllers
 
             return View(prodList);
         }
+
+
+        public IActionResult Remove(int id)
+        {
+            List<ShoppingCart> shoppingCarts = new List<ShoppingCart>();
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null
+                && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0)
+            {
+                //session exist
+                shoppingCarts = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
+
+            }
+
+            shoppingCarts.Remove(shoppingCarts.FirstOrDefault(p => p.ProductId == id));
+            HttpContext.Session.Set(WC.SessionCart, shoppingCarts);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
     }
 }

@@ -28,5 +28,7 @@ namespace ASP.netCore5NTier.Models
         [ForeignKey("ApplicationTypeId")]
         public virtual ApplicationType ApplicationType { get; set; }
 
+        public string ShortDesc { get; set; }
+
     }
 }

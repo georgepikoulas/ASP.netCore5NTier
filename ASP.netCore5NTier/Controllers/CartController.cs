@@ -3,17 +3,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ASP.netCore5NTier.Data;
 using ASP.netCore5NTier.Models;
+using ASP.netCore5NTier.Models.ViewModels;
 using ASP.netCore5NTier.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 
 namespace ASP.netCore5NTier.Controllers
 {
+    [Authorize]
     public class CartController : Controller
     {
         private readonly ApplicationDBContext _db;
+        [BindProperty ]
+        public ProductUserVM ProductUserVm { get; set; }
+
 
         public CartController(ApplicationDBContext db)
         {
@@ -36,6 +43,40 @@ namespace ASP.netCore5NTier.Controllers
             return View(prodList);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Index")]
+        public IActionResult IndexPost()
+        {
+            
+            return RedirectToAction(nameof(Summary));
+        }
+
+        public IActionResult Summary()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            List<ShoppingCart> shoppingCarts = new List<ShoppingCart>();
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null
+                && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0)
+            {
+                //session exist
+                shoppingCarts = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
+
+            }
+
+            var prodInCart = shoppingCarts.Select(p => p.ProductId).ToList();
+            var prodList = _db.Product.Where(p => prodInCart.Contains(p.Id));
+
+
+            ProductUserVm = new ProductUserVM()
+            {
+                ApplicationUser = _db.ApplicationUser.FirstOrDefault(p=>p.Id == claim.Value)
+            };
+
+            return View(ProductUserVm);
+        }
 
         public IActionResult Remove(int id)
         {

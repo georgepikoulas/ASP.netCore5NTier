@@ -72,7 +72,8 @@ namespace ASP.netCore5NTier.Controllers
 
             ProductUserVm = new ProductUserVM()
             {
-                ApplicationUser = _db.ApplicationUser.FirstOrDefault(p=>p.Id == claim.Value)
+                ApplicationUser = _db.ApplicationUser.FirstOrDefault(p=>p.Id == claim.Value),
+                Products = prodList
             };
 
             return View(ProductUserVm);

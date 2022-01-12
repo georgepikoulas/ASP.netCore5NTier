@@ -9,7 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.netCore5NTier.Data;
+using ASP.netCore5NTier.Utility;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace ASP.netCore5NTier
@@ -35,6 +37,7 @@ namespace ASP.netCore5NTier
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDBContext>();
 
+            //services.AddTransient<IEmailSender, EmailSender>();
             services.AddHttpContextAccessor();
             services.AddSession(op =>
             {

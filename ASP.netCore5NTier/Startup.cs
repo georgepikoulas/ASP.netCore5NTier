@@ -37,7 +37,7 @@ namespace ASP.netCore5NTier
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDBContext>();
 
-            //services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IEmailSender, EmailSender>();
             services.AddHttpContextAccessor();
             services.AddSession(op =>
             {

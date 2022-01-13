@@ -14,7 +14,13 @@ namespace ASP.netCore5NTier.Utility
     {
         private readonly IConfiguration _configuration;
 
+
         public MailJetSettings _mailJetSettings { get; set; }
+
+        public EmailSender(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
@@ -23,9 +29,11 @@ namespace ASP.netCore5NTier.Utility
 
         public async Task Execute(string email, string subject, string htmlMessage)
         {
-            
 
-            MailjetClient client = new MailjetClient("084dbbc337f733fbe72f78136bbb22c1", "4c52e1c774f516ed228c83fa63a45c81")
+
+            _mailJetSettings = _configuration.GetSection("MailJet").Get<MailJetSettings>();
+
+            MailjetClient client = new MailjetClient(_mailJetSettings.ApiKey, _mailJetSettings.SecretKey)
             {
                 Version = ApiVersion.V3_1,
             };

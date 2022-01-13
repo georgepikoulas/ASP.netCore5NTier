@@ -67,7 +67,7 @@ namespace ASP.netCore5NTier.Controllers
             }
 
             var prodInCart = shoppingCarts.Select(p => p.ProductId).ToList();
-            var prodList = _db.Product.Where(p => prodInCart.Contains(p.Id));
+            var prodList = _db.Product.Where(p => prodInCart.Contains(p.Id)).ToList();
 
 
             ProductUserVm = new ProductUserVM()
@@ -77,6 +77,22 @@ namespace ASP.netCore5NTier.Controllers
             };
 
             return View(ProductUserVm);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Summary")]
+        public IActionResult SummaryPost()
+        {
+           HttpContext.Session.Clear();
+
+            return RedirectToAction(nameof(InquiryConfirmation));
+        }
+
+
+        public IActionResult InquiryConfirmation()
+        {
+
+            return View();
         }
 
         public IActionResult Remove(int id)

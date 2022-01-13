@@ -16,3 +16,4 @@ namespace ASP.netCore5NTier.Models.ViewModels
         public IList<Product> Products { get; set; }
     }
 }
+    

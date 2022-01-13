@@ -1,16 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using ASP.netCore5NTier.Data;
 using ASP.netCore5NTier.Models;
 using ASP.netCore5NTier.Models.ViewModels;
 using ASP.netCore5NTier.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace ASP.netCore5NTier.Controllers
 {
@@ -18,13 +22,18 @@ namespace ASP.netCore5NTier.Controllers
     public class CartController : Controller
     {
         private readonly ApplicationDBContext _db;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IEmailSender _emailSender;
+
         [BindProperty ]
         public ProductUserVM ProductUserVm { get; set; }
 
 
-        public CartController(ApplicationDBContext db)
+        public CartController(ApplicationDBContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
+            _emailSender = emailSender;
         }
         public IActionResult Index()
         {
@@ -81,9 +90,38 @@ namespace ASP.netCore5NTier.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Summary")]
-        public IActionResult SummaryPost()
+        public async Task<IActionResult> SummaryPost()
         {
-           HttpContext.Session.Clear();
+            //Conctrusting the Path to get the Inquiry.html template from wwrroot
+            var pathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString() +
+                                 "templates" + Path.DirectorySeparatorChar.ToString() + "Inquiry.html";
+
+            var subject = "New Inquiry";
+            string HtmlBody = "";
+            using (StreamReader sr = System.IO.File.OpenText(pathToTemplate))
+            {
+                HtmlBody = sr.ReadToEnd();
+            }
+
+            //Name: { 0}
+            //Email: { 1}
+            //Phone: { 2}
+            //Products: {3}
+
+            StringBuilder productListSB = new StringBuilder();
+
+            foreach (var prod in ProductUserVm.Products)
+            {
+                productListSB.Append(
+                    $"- Name: {prod.Name} <span style='font-size:14px;'> ID : {prod.Id}</span><br/>");
+            }
+
+            string messageBody = string.Format(HtmlBody, ProductUserVm.ApplicationUser.FullName,
+                ProductUserVm.ApplicationUser.Email, ProductUserVm.ApplicationUser.PhoneNumber,
+                productListSB.ToString());
+
+            await _emailSender.SendEmailAsync(WC.EmailAdmin, subject, messageBody);
+
 
             return RedirectToAction(nameof(InquiryConfirmation));
         }
@@ -91,6 +129,7 @@ namespace ASP.netCore5NTier.Controllers
 
         public IActionResult InquiryConfirmation()
         {
+            HttpContext.Session.Clear();
 
             return View();
         }

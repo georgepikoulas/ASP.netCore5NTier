@@ -25,7 +25,10 @@ namespace ASP.netCore5NTier.Utility
         {
             
 
-            MailjetClient client = new MailjetClient("084dbbc337f733fbe72f78136bbb22c1", "4c52e1c774f516ed228c83fa63a45c81");
+            MailjetClient client = new MailjetClient("084dbbc337f733fbe72f78136bbb22c1", "4c52e1c774f516ed228c83fa63a45c81")
+            {
+                Version = ApiVersion.V3_1,
+            };
             MailjetRequest request = new MailjetRequest
                 {
                     Resource = Send.Resource,

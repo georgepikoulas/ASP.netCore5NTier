@@ -8,12 +8,15 @@ using System.Threading.Tasks;
 using ASP.netCore5NTier.Data;
 using ASP.netCore5NTier.Models;
 using ASP.netCore5NTier.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ASP.netCore5NTier.Controllers
 {
+    [Authorize(Roles = WC.AdminRole)]
+
     public class ProductController : Controller
     {
         private readonly ApplicationDBContext _db;

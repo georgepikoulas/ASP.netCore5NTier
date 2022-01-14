@@ -5,9 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using ASP.netCore5NTier.Data;
 using ASP.netCore5NTier.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASP.netCore5NTier.Controllers
 {
+    [Authorize(Roles = WC.AdminRole)] 
+
     public class ApplicationTypeController : Controller
     {
         private readonly ApplicationDBContext _db;

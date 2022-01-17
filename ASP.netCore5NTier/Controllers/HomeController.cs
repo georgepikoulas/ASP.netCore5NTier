@@ -54,7 +54,7 @@ namespace ASP.netCore5NTier.Controllers
             {
                 shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
             }
-            var detailsVM = new DetailsVM() { 
+            var detailsVM = new ProductDetailsVM() { 
                 Product = _db.Product.Include(p=>p.Category).Include(p => p.ApplicationType).Where(p=>p.Id == id ).FirstOrDefault(),
                 ExistsInCart = false
             };

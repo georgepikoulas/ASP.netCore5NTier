@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ASP.netCore5NTier.Models.ViewModels
 {
-    public class DetailsVM
+    public class ProductDetailsVM
     {
-        public DetailsVM()
+        public ProductDetailsVM()
         {
             Product = new Product();
         }

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.netCore5NTier", "ASP.ne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.netCore5NTier.Utility", "ASP.netCore5NTier.Utility\ASP.netCore5NTier.Utility.csproj", "{3363EC00-434E-4F23-8705-F6AC34119880}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.netCore5NTier.Models", "ASP.netCore5NTier.Models\ASP.netCore5NTier.Models.csproj", "{1D66C7EE-14F5-4590-A0C1-5A24A0791257}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{3363EC00-434E-4F23-8705-F6AC34119880}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3363EC00-434E-4F23-8705-F6AC34119880}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3363EC00-434E-4F23-8705-F6AC34119880}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D66C7EE-14F5-4590-A0C1-5A24A0791257}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D66C7EE-14F5-4590-A0C1-5A24A0791257}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D66C7EE-14F5-4590-A0C1-5A24A0791257}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D66C7EE-14F5-4590-A0C1-5A24A0791257}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

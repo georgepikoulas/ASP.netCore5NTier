@@ -22,4 +22,8 @@
     <Folder Include="wwwroot\images\product\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ASP.netCore5NTier.Utility\ASP.netCore5NTier.Utility.csproj" />
+  </ItemGroup>
+
 </Project>

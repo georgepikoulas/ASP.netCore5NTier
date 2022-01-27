@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ASP.netCore5NTier
+namespace ASP.netCore5NTier.Utility
 {
     public static class WC
     {

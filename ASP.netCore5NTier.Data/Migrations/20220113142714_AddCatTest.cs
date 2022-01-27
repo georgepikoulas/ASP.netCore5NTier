@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ASP.netCore5NTier.Migrations
+namespace ASP.netCore5NTier.Data.Migrations
 {
     public partial class AddCatTest : Migration
     {

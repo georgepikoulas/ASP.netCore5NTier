@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ASP.netCore5NTier.Migrations
+namespace ASP.netCore5NTier.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
     [Migration("20220113142714_AddCatTest")]

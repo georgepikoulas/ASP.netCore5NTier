@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ASP.netCore5NTier.Data\ASP.netCore5NTier.Data.csproj" />
     <ProjectReference Include="..\ASP.netCore5NTier.Models\ASP.netCore5NTier.Models.csproj" />
     <ProjectReference Include="..\ASP.netCore5NTier.Utility\ASP.netCore5NTier.Utility.csproj" />
   </ItemGroup>

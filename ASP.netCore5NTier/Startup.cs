@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.netCore5NTier.Data;
+using ASP.netCore5NTier.Data.Repository;
+using ASP.netCore5NTier.Data.Repository.IRepository;
 using ASP.netCore5NTier.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -45,6 +47,7 @@ namespace ASP.netCore5NTier
                 op.Cookie.HttpOnly = true;
                 op.Cookie.IsEssential = true;
             });
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddControllersWithViews();
         }
 

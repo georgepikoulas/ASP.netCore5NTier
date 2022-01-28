@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.netCore5NTier.Data;
+using ASP.netCore5NTier.Data.Repository.IRepository;
 using ASP.netCore5NTier.Models;
 using ASP.netCore5NTier.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -15,16 +16,16 @@ namespace ASP.netCore5NTier.Controllers
     [Authorize(Roles = WC.AdminRole)]
     public class CategoryController : Controller
     {
-        private readonly ApplicationDBContext _db;
+        private readonly ICategoryRepository _categoryRepository;
 
 
-        public CategoryController(ApplicationDBContext db)
+        public CategoryController(ICategoryRepository categoryRepository )
         {
-            _db = db;
+            _categoryRepository = categoryRepository;
         }
         public IActionResult Index()
         {
-            IEnumerable<Category> categories = _db.Category;
+            IEnumerable<Category> categories = _categoryRepository.GetAll();
             return View(categories);
         }
 
@@ -42,8 +43,8 @@ namespace ASP.netCore5NTier.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Category.Add(category);
-                _db.SaveChanges();
+                _categoryRepository.Add(category);
+                _categoryRepository.Save();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -58,7 +59,7 @@ namespace ASP.netCore5NTier.Controllers
                 return NotFound();
             }
 
-            var obj = _db.Category.FirstOrDefault(p => p.Id == id);
+            var obj = _categoryRepository.FirstOrDefault(p => p.Id == id);
 
             if (obj == null)
                 return NotFound();
@@ -73,8 +74,8 @@ namespace ASP.netCore5NTier.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Category.Update(category);
-                _db.SaveChanges();
+                _categoryRepository.Update(category);
+                _categoryRepository.Save();
                 return RedirectToAction("Index");
             }
 
@@ -89,7 +90,7 @@ namespace ASP.netCore5NTier.Controllers
                 return NotFound();
             }
 
-            var obj = _db.Category.Find(id);
+            var obj = _categoryRepository.Find(id.GetValueOrDefault());
 
             if (obj == null)
                 return NotFound();
@@ -102,12 +103,12 @@ namespace ASP.netCore5NTier.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _db.Category.Find(id);
+            var obj = _categoryRepository.Find(id.GetValueOrDefault());
             if (obj == null)
                 return NotFound();
 
-            _db.Category.Remove(obj);
-            _db.SaveChanges();
+            _categoryRepository.Remove(obj);
+            _categoryRepository.Save();
             return RedirectToAction("Index");
 
         }

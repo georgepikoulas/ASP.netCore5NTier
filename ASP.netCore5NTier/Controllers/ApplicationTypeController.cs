@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.netCore5NTier.Data;
+using ASP.netCore5NTier.Data.Repository;
+using ASP.netCore5NTier.Data.Repository.IRepository;
 using ASP.netCore5NTier.Models;
 using ASP.netCore5NTier.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -14,16 +16,15 @@ namespace ASP.netCore5NTier.Controllers
 
     public class ApplicationTypeController : Controller
     {
-        private readonly ApplicationDBContext _db;
+        private readonly IApplicationTypeRepository _applicationTypeRepository;
 
-
-        public ApplicationTypeController(ApplicationDBContext db)
+        public ApplicationTypeController(IApplicationTypeRepository applicationTypeRepository )
         {
-            _db = db;
+            _applicationTypeRepository = applicationTypeRepository;
         }
         public IActionResult Index()
         {
-            IEnumerable<ApplicationType> categories = _db.ApplicationType;
+            IEnumerable<ApplicationType> categories = _applicationTypeRepository.GetAll();
             return View(categories);
         }
 
@@ -39,8 +40,8 @@ namespace ASP.netCore5NTier.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(ApplicationType applicationType)
         {
-            _db.ApplicationType.Add(applicationType);
-            _db.SaveChanges();
+            _applicationTypeRepository.Add(applicationType);
+            _applicationTypeRepository.Save();
             return RedirectToAction("Index");
         }
         //GET - EDIT
@@ -50,7 +51,7 @@ namespace ASP.netCore5NTier.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.ApplicationType.Find(id);
+            var obj = _applicationTypeRepository.Find(id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
@@ -66,8 +67,8 @@ namespace ASP.netCore5NTier.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.ApplicationType.Update(obj);
-                _db.SaveChanges();
+                _applicationTypeRepository.Update(obj);
+                _applicationTypeRepository.Save();
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -81,7 +82,7 @@ namespace ASP.netCore5NTier.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.ApplicationType.Find(id);
+            var obj = _applicationTypeRepository.Find(id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
@@ -95,13 +96,13 @@ namespace ASP.netCore5NTier.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _db.ApplicationType.Find(id);
+            var obj = _applicationTypeRepository.Find(id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
             }
-            _db.ApplicationType.Remove(obj);
-            _db.SaveChanges();
+            _applicationTypeRepository.Remove(obj);
+            _applicationTypeRepository.Save();
             return RedirectToAction("Index");
 
 

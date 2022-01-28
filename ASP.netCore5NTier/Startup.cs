@@ -48,6 +48,8 @@ namespace ASP.netCore5NTier
                 op.Cookie.IsEssential = true;
             });
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IApplicationTypeRepository, ApplicationTypeRepository>();
+
             services.AddControllersWithViews();
         }
 

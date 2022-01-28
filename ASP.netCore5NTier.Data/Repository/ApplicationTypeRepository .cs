@@ -17,7 +17,7 @@ namespace ASP.netCore5NTier.Data.Repository
         }
         public void Update(ApplicationType obj)
         {
-            _db.Update(obj);
+            _db.ApplicationType.Update(obj);
         }
     }
 }

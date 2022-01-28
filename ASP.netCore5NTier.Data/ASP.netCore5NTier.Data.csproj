@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ASP.netCore5NTier.Models\ASP.netCore5NTier.Models.csproj" />
+    <ProjectReference Include="..\ASP.netCore5NTier.Utility\ASP.netCore5NTier.Utility.csproj" />
   </ItemGroup>
 
 </Project>

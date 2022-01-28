@@ -16,5 +16,8 @@ namespace ASP.netCore5NTier.Utility
 
         public const string EmailAdmin = "geopik@gmail.com";
 
+        public const string CategoryName = "Category";
+        public const string ApplicationTypeName = "ApplicationType";
+
     }
 }

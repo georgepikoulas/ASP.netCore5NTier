@@ -6,6 +6,8 @@ using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using ASP.netCore5NTier.Data;
+using ASP.netCore5NTier.Data.Repository;
+using ASP.netCore5NTier.Data.Repository.IRepository;
 using ASP.netCore5NTier.Models;
 using ASP.netCore5NTier.Models.ViewModels;
 using ASP.netCore5NTier.Utility;
@@ -20,17 +22,17 @@ namespace ASP.netCore5NTier.Controllers
 
     public class ProductController : Controller
     {
-        private readonly ApplicationDBContext _db;
+        private readonly IProductRepository _productRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(ApplicationDBContext db, IWebHostEnvironment webHostEnvironment)
+        public ProductController(IProductRepository productRepository, IWebHostEnvironment webHostEnvironment)
         {
-            _db = db;
+            _productRepository = productRepository;
             _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
-            IEnumerable<Product> products = _db.Product.Include(u => u.Category).Include(u => u.ApplicationType);
+            IEnumerable<Product> products = _productRepository.GetAll(includeProperties:$"{nameof(Category)},{nameof(ApplicationType)}"  );
 
             return View(products);
         }
@@ -51,18 +53,8 @@ namespace ASP.netCore5NTier.Controllers
             ProductVM productVM = new ProductVM()
             {
                 Product = new Product(),
-                CategoryListItems = _db.Category.Select(p => new SelectListItem
-                {
-
-                    Text = p.Name,
-                    Value = p.Id.ToString()
-                }),
-                ApplicationTypeSelectList = _db.ApplicationType.Select(p => new SelectListItem
-                {
-
-                    Text = p.Name,
-                    Value = p.Id.ToString()
-                })
+                CategoryListItems = _productRepository.GetAllDropdownList(WC.CategoryName),
+                ApplicationTypeSelectList = _productRepository.GetAllDropdownList(WC.ApplicationTypeName),
             };
 
             if (id == null)
@@ -72,7 +64,7 @@ namespace ASP.netCore5NTier.Controllers
             }
             else
             {
-                productVM.Product = _db.Product.FirstOrDefault(p => p.Id ==id);
+                productVM.Product = _productRepository.Find(id.GetValueOrDefault());
                 if (productVM == null)
                 {
                     return NotFound();
@@ -108,13 +100,13 @@ namespace ASP.netCore5NTier.Controllers
                     }
 
                     productVm.Product.Image = fileName + extension;
-                    _db.Add(productVm.Product);
+                    _productRepository.Add(productVm.Product);
 
                 }
                 else
                 {
                     //Updating 
-                    var getProductDb = _db.Product.AsNoTracking().FirstOrDefault(p => p.Id == productVm.Product.Id);
+                    var getProductDb = _productRepository.FirstOrDefault(p => p.Id == productVm.Product.Id , isTracking:false);
 
                     if (files.Count > 0)
                     {
@@ -141,27 +133,16 @@ namespace ASP.netCore5NTier.Controllers
                         productVm.Product.Image = getProductDb.Image;
                     }
 
-                    _db.Update(productVm.Product);
+                    _productRepository.Update(productVm.Product);
                 }
-                _db.SaveChanges();
+                _productRepository.Save();
 
                 return RedirectToAction("Index");
             }
 
-            productVm.CategoryListItems = _db.Category.Select(p => new SelectListItem
-            {
+            productVm.CategoryListItems = _productRepository.GetAllDropdownList(WC.CategoryName);
+            productVm.ApplicationTypeSelectList = _productRepository.GetAllDropdownList(WC.ApplicationTypeName);
 
-                Text = p.Name,
-                Value = p.Id.ToString()
-            });
-
-
-            productVm.CategoryListItems = _db.ApplicationType.Select(p => new SelectListItem
-            {
-
-                Text = p.Name,
-                Value = p.Id.ToString()
-            });
             return View(productVm);
         }
 
@@ -174,7 +155,7 @@ namespace ASP.netCore5NTier.Controllers
                 return NotFound();
             }
 
-            var product = _db.Product.Include(p => p.Category).Include(p=>p.ApplicationType).FirstOrDefault(p => p.Id == id);
+            var product = _productRepository.FirstOrDefault(p => p.Id == id, includeProperties: $"{nameof(Category)},{nameof(ApplicationType)}");
 
             if (product == null)
                 return NotFound();
@@ -186,7 +167,7 @@ namespace ASP.netCore5NTier.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var product = _db.Product.Find(id);
+            var product = _productRepository.Find(id.GetValueOrDefault());
             if (product == null)
                 return NotFound();
             var upload = _webHostEnvironment.WebRootPath + WC.ImagePath;
@@ -198,8 +179,8 @@ namespace ASP.netCore5NTier.Controllers
                 System.IO.File.Delete(oldfile);
             }
 
-            _db.Remove(product);
-            _db.SaveChanges();
+            _productRepository.Remove(product);
+            _productRepository.Save();
             return RedirectToAction("Index");
         }
 

@@ -18,5 +18,18 @@ namespace ASP.netCore5NTier.Data.Repository.IRepository
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             string includeProperties = null,
             bool isTracking = true);
+        //Get one record . Also we can add optional parameters for Order, included tables(JOINs) , define if the query needs to be tracked or not. If the query is only for reading we can switch this off and get improved performance 
+        T FirstOrDefault(
+            Expression<Func<T, bool>> filter = null,
+            string includeProperties = null,
+            bool isTracking = true);
+
+        void Add(T entity);
+
+        void Remove(T entity);
+
+        void Save();
+
+
     }
 }

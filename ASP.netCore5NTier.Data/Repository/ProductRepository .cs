@@ -42,6 +42,6 @@ namespace ASP.netCore5NTier.Data.Repository
         public void Update(Product obj)
         {
             _db.Product.Update(obj);
-        }
+        } 
     }
 }

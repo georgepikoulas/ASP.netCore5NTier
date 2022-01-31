@@ -13,7 +13,7 @@ namespace ASP.netCore5NTier.Data
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
-                
+
         }
 
         public DbSet<Category> Category { get; set; }
@@ -21,5 +21,8 @@ namespace ASP.netCore5NTier.Data
 
         public DbSet<Product> Product { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
+
+        public DbSet<InquiryHeader> InquiryHeader { get; set; }
+        public DbSet<InquiryDetail> InquiryDetail { get; set; }
     }
 }

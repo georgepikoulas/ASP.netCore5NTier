@@ -10,25 +10,29 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using ASP.netCore5NTier.Data.Repository.IRepository;
 
 namespace ASP.netCore5NTier.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDBContext _db;
+        private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDBContext db)
+
+        public HomeController(ILogger<HomeController> logger, IProductRepository productRepository, ICategoryRepository categoryRepository )
         {
             _logger = logger;
-            _db = db;
+            _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public IActionResult Index()
         {
             var homeVM = new HomeVM() {
-                Products = _db.Product.Include(p =>p.Category).Include(p=>p.ApplicationType),
-                Categories =_db.Category
+                Products = _productRepository.GetAll(includeProperties: $"{nameof(Category)},{nameof(ApplicationType)}"),
+                Categories =_categoryRepository.GetAll()
             
             };
 
@@ -55,7 +59,7 @@ namespace ASP.netCore5NTier.Controllers
                 shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
             }
             var detailsVM = new ProductDetailsVM() { 
-                Product = _db.Product.Include(p=>p.Category).Include(p => p.ApplicationType).Where(p=>p.Id == id ).FirstOrDefault(),
+                Product = _productRepository.FirstOrDefault(p=>p.Id ==  id , includeProperties: $"{nameof(Category)},{nameof(ApplicationType)}"),
                 ExistsInCart = false
             };
 

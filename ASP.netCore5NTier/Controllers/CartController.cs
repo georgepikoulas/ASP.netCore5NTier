@@ -101,7 +101,11 @@ namespace ASP.netCore5NTier.Controllers
         [ActionName("Summary")]
         public async Task<IActionResult> SummaryPost()
         {
-            //Conctrusting the Path to get the Inquiry.html template from wwrroot
+            //Get the claims of the User
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            //Conctrusting the Path to get the Inquiry.html template from wwwroot
             var pathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString() +
                                  "templates" + Path.DirectorySeparatorChar.ToString() + "Inquiry.html";
 
@@ -130,6 +134,31 @@ namespace ASP.netCore5NTier.Controllers
                 productListSB.ToString());
 
             await _emailSender.SendEmailAsync(WC.EmailAdmin, subject, messageBody);
+
+            InquiryHeader inquiryHeader = new InquiryHeader()
+            {
+                ApplicationUserId = claim.Value,
+                FullName = ProductUserVm.ApplicationUser.FullName,
+                Email = ProductUserVm.ApplicationUser.Email,
+                PhoneNumber = ProductUserVm.ApplicationUser.PhoneNumber,
+                InquiryDate = DateTime.Now
+            };                
+            
+            _inquiryHeaderRepository.Add(inquiryHeader);
+            _inquiryHeaderRepository.Save();//To get hader ID from db for assosiating with new deatil
+
+            foreach (var prod in ProductUserVm.Products)
+            {
+                InquiryDetail inquiryDetail = new InquiryDetail()
+                {
+                    InquiryHeaderId = inquiryHeader.Id,
+                    ProductId = prod.Id,
+
+                };
+                _inquiryDetailRepository.Add(inquiryDetail);
+
+            }
+            _inquiryDetailRepository.Save();
 
 
             return RedirectToAction(nameof(InquiryConfirmation));

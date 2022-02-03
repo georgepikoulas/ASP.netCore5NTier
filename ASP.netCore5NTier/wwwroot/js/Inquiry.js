@@ -19,12 +19,12 @@ function loadDatatable(url) {
                 "data": "id",
                 "render": function (data) {
                     return `
-                            <div class="text-center">
-                                <a href=""/InquiryDetails/${data}" class="btn btn-success text-white" style="cursor:pointer">
+                        <div class="text-center">
+                            <a href="/Inquiry/Details/${data}" class="btn btn-success text-white" style="cursor:pointer">
                                 <i class="fas fa-edit"></i>
-                                </a>
-                            </div>
-                            `;
+                            </a>
+                        </div>
+                    `;
                 },
                 "width": "5%"
             },

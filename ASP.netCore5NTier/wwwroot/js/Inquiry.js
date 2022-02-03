@@ -1,19 +1,19 @@
 ﻿var dataTable;
 
 $(document).ready(function () {
-    $("#myTable").Datatable();
+    loadDatatable("GetInquiryList");
 });
 
 
-function(url) {
+function loadDatatable(url) {
     dataTable = $("#tblData").dataTable({
         "ajax": {
             "url": "/inquiry/" + url
         },
         "columns": [
             { "data": "id", "width": "10%" },
-            { "data": "fullname", "width": "15%" },
-            { "data": "phonenumber", "width": "15%" },
+            { "data": "fullName", "width": "15%" },
+            { "data": "phoneNumber", "width": "15%" },
             { "data": "email", "width": "15%" },
             {
                 "data": "id",

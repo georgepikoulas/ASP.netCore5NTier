@@ -25,5 +25,15 @@ namespace ASP.netCore5NTier.Controllers
         {
             return View();
         }
+
+        #region API Calls
+
+        [HttpGet]
+        public IActionResult GetInquiryList()
+        {
+            return Json(new { data = _inquiryHeaderRepository.GetAll() });
+        }
+
+        #endregion
     }
 }
